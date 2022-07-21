@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "link": "react-native link",
     "restart": "adb reverse tcp:8081 tcp:8081 && react-native start --reset-cache",
     "android": "cd android && ./gradlew clean && cd .. && react-native run-android",
     "ios": "react-native run-ios",

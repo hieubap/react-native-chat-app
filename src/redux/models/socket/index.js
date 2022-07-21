@@ -30,6 +30,7 @@ export default {
     (() => {
       try {
         let data = {
+          isConnect: false,
           stompClient: null,
 
           listRoom: [],
@@ -75,6 +76,12 @@ export default {
   },
   effects: dispatch => ({
     connect: (payload = {}, state) => {
+      if (state.socket.isConnect) {
+        return;
+      }
+      dispatch.socket.updateData({
+        isConnect: true,
+      });
       var stompClient = null;
       var socket = null;
       const {userId = 1, deviceInfoId} = state.auth?.auth || {};
@@ -116,6 +123,11 @@ export default {
       };
 
       function stompFailure(error) {
+        if (state.socket.isConnect) {
+          dispatch.socket.updateData({
+            isConnect: false,
+          });
+        }
         // toast.error('Hệ thống đang bảo trì. Xin vui lòng chờ ...');
       }
 
