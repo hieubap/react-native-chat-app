@@ -18,21 +18,6 @@ import Message from './message';
 
 const screenSize = Dimensions.get('window');
 
-const testData = () => {
-  const output = [];
-  for (let i = 0; i < 50; i++) {
-    output.push({
-      content:
-        i % 5 === 0
-          ? `${i} Nội dung tin nhắn, Nội dung tin nhắn, Nội dung tin nhắn, Nội dung tin nhắn, dung tin nhắn, dung tin nhắn, dung tin nhắn, dung tin nhắn,`
-          : i + ' Nội dung tin nhắn',
-      type: i % 3 === 0,
-    });
-  }
-  return output;
-};
-const userActive = testData();
-
 const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
   const [state, _setState] = useState({
     width: screenSize.width,

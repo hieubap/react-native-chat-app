@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import Chat from '../screen/chat';
 import Home from '../screen/home';
 import Login from '../screen/login';
-import Spash from '../screen/spash';
+import Splash from '../screen/splash';
 
 const Stack = createStackNavigator();
 
@@ -14,9 +14,9 @@ const StackNavigation = ({}) => {
   return (
     <Stack.Navigator
       // drawerContent={(props) => <CustomDrawerContent {...props} />}
-      initialRouteName={'Spash'}
+      initialRouteName={'Splash'}
       headerMode="none">
-      <Stack.Screen name="Spash" component={Spash} />
+      <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Chat" component={Chat} />

@@ -20,6 +20,7 @@ import Background from '../../components/Background';
 import InputTimeout from '../../components/InputTimeout';
 import {getImg, timeFromNow} from '../../utils/common';
 import {imgDefault} from '../../variable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const height = Dimensions.get('window').height;
 
@@ -110,6 +111,7 @@ const Home = ({
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             onPress={() => {
+              AsyncStorage.clear();
               goBack(navigation);
             }}>
             <Image
