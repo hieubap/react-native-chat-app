@@ -7,11 +7,11 @@ import {
   ScrollView,
   Dimensions,
   Image,
-  TextInput,
   Keyboard,
 } from 'react-native';
 import {connect} from 'react-redux';
 import Avatar from '../../components/Avatar';
+import Background from '../../components/Background';
 import InputTimeout from '../../components/InputTimeout';
 import {getImg} from '../../utils/common';
 import Message from './message';
@@ -104,15 +104,13 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
   };
   console.log(listMessage, 'listmessage');
   return (
-    <View
-      style={{
-        backgroundColor: '#fff',
-      }}>
+    <Background>
       <View
         style={{
           display: 'flex',
-          height: 60,
-          backgroundColor: '#fff',
+          height: 120,
+          paddingTop: 30,
+          // backgroundColor: '#fff',
           flexDirection: 'row',
           alignItems: 'center',
           shadowColor: '#000',
@@ -132,10 +130,11 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
             <Image
               source={require('../../assets/images/arrow-back.png')}
               style={{
-                width: 25,
+                width: 20,
                 height: 20,
+                resizeMode: 'stretch',
               }}
-              tintColor="#4552ff"
+              tintColor="white"
             />
           </View>
         </TouchableWithoutFeedback>
@@ -145,7 +144,7 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
         <Text
           style={{
             fontSize: 16,
-            color: 'black',
+            color: 'white',
             fontWeight: '500',
             paddingLeft: 10,
           }}>
@@ -166,7 +165,7 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
               height: 28,
               marginRight: 10,
             }}
-            tintColor="#4552ff"
+            tintColor="#fff"
           />
           <Image
             source={require('../../assets/images/information.png')}
@@ -174,11 +173,21 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
               width: 24,
               height: 24,
             }}
-            tintColor="#4552ff"
+            tintColor="#fff"
           />
         </View>
       </View>
-      <View style={{height: state.height - 120}}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+          paddingTop: 20,
+          paddingLeft: 5,
+          paddingRight: 5,
+          overflow: 'hidden',
+          height: state.height - 140,
+        }}>
         <ScrollView ref={refScroll} style={{paddingHorizontal: 5}}>
           {listMessage.map((item, idx) => (
             <Message
@@ -199,6 +208,7 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
           height: 50,
           paddingVertical: 5,
           flexDirection: 'row',
+          backgroundColor: 'white',
         }}>
         <InputTimeout
           ref={refInput}
@@ -237,7 +247,7 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
           </View>
         </TouchableWithoutFeedback>
       </View>
-    </View>
+    </Background>
   );
 };
 

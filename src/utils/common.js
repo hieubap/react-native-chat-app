@@ -50,6 +50,32 @@ const timeFromNow = (fromDate, format) => {
   if (ns - fs > 0) return `${ns - fs} giây trước`;
 };
 
+String.prototype.fromNow = function () {
+  if (!this) return '';
+  const date = new Date(this);
+  const fy = date.getFullYear();
+  const fM = date.getMonth();
+  const fd = date.getDay();
+  const fh = date.getHours();
+  const fm = date.getMinutes();
+  const fs = date.getSeconds();
+
+  const now = new Date();
+  const ny = now.getFullYear();
+  const nM = now.getMonth();
+  const nd = now.getDay();
+  const nh = now.getHours();
+  const nm = now.getMinutes();
+  const ns = now.getSeconds();
+
+  if (ny - fy > 0) return `${ny - fy} năm trước`;
+  if (nM - fM > 0) return `${nM - fM} tháng trước`;
+  if (nd - fd > 0) return `${nd - fd} ngày trước`;
+  if (nh - fh > 0) return `${nh - fh} giờ trước`;
+  if (nm - fm > 0) return `${nm - fm} phút trước`;
+  if (ns - fs > 0) return `${ns - fs} giây trước`;
+};
+
 // export const momentFromNow = (m) => {
 //   const date = moment(m);
 //   const fy = date.year();

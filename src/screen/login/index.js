@@ -3,14 +3,18 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   Keyboard,
+  StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
+import {refModal} from '../..';
+import Background from '../../components/Background';
+import ButtonShadow from '../../components/ButtonShadow';
 import InputTimeout from '../../components/InputTimeout';
 
-const screenSize = Dimensions.get('window');
+const screen = Dimensions.get('window');
 
 const Login = ({
   navigation,
@@ -20,8 +24,8 @@ const Login = ({
   currentRoom,
 }) => {
   const [state, _setState] = useState({
-    width: screenSize.width,
-    height: screenSize.height,
+    width: screen.width,
+    height: screen.height,
     emptyInput: true,
     inputData: '',
   });
@@ -30,15 +34,23 @@ const Login = ({
   };
 
   const refScroll = useRef();
-  const refInput = useRef();
+  const refPassword = useRef();
 
   const onSubmit = () => {
     if (!state.username || !state.password) {
       return;
     }
-    console.log('login ...');
     onLogin({username: state.username, password: state.password}).then(() => {
-      navigation.push('Home');
+      refModal.current &&
+        refModal.current.show(
+          {
+            type: 'success',
+            content: 'Đăng nhập thành công',
+          },
+          () => {
+            navigation.replace('Home');
+          },
+        );
     });
   };
 
@@ -77,80 +89,108 @@ const Login = ({
     }
   };
   return (
-    <View
-      style={{
-        backgroundColor: '#dfe0e4',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1,
-      }}>
+    <Background>
       <View
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: screenSize.width,
-          height: screenSize.height / 2,
-          backgroundColor: '#7972e5',
-          borderBottomLeftRadius: 50,
-          borderBottomRightRadius: 50,
-        }}></View>
-      <View
-        style={{
-          //   paddingLeft: 30,
-          width: (screenSize.width * 8) / 10,
-          height: (screenSize.width * 8) / 10,
-          backgroundColor: 'white',
-          borderRadius: 20,
-          paddingHorizontal: 20,
-          paddingVertical: 50,
-          //   borderWidth: 1,
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-        <InputTimeout
-          ref={refInput}
+        <View
           style={{
-            backgroundColor: '#f2f3f5',
-            height: 50,
-            fontSize: 16,
-            borderRadius: 8,
-            paddingLeft: 20,
-            marginBottom: 20,
-          }}
-          onChange={onChangeInput}
-          onChangeText={onChangeText('username')}
-          value={state.username}
-          placeholder="Username"
-        />
-        <InputTimeout
-          ref={refInput}
+            alignItems: 'center',
+            marginTop: -50,
+            marginBottom: 50,
+            zIndex: 2,
+          }}>
+          <Text style={{fontSize: 40, color: 'white', fontWeight: 'bold'}}>
+            Chat App
+          </Text>
+        </View>
+        <View
           style={{
-            backgroundColor: '#f2f3f5',
-            height: 50,
-            fontSize: 16,
-            borderRadius: 8,
-            paddingLeft: 20,
-            marginBottom: 20,
-          }}
-          onChange={onChangeInput}
-          onChangeText={onChangeText('password')}
-          value={state.password}
-          placeholder="Password"
-        />
-        <TouchableWithoutFeedback onPress={onSubmit}>
+            width: (screen.width * 8) / 10,
+            height: (screen.width * 8) / 10,
+            backgroundColor: 'white',
+            borderRadius: 20,
+            paddingHorizontal: 20,
+            paddingTop: 20,
+            paddingBottom: 50,
+            borderBottomWidth: 4,
+            borderRightWidth: 4,
+            borderLeftWidth: 1,
+            borderLeftColor: '#ddd',
+            borderRightColor: '#888',
+            borderBottomColor: '#888',
+          }}>
           <View
             style={{
-              height: 40,
-              backgroundColor: '#837ded',
-              borderRadius: 5,
               alignItems: 'center',
-              justifyContent: 'center',
+              paddingBottom: 30,
             }}>
-            <Text style={{color: 'white', fontSize: 16}}>Login</Text>
+            <Text style={{fontSize: 18, color: 'black', fontWeight: 'bold'}}>
+              Login
+            </Text>
           </View>
-        </TouchableWithoutFeedback>
+          <InputTimeout
+            style={{
+              backgroundColor: '#f2f3f5',
+              height: 50,
+              fontSize: 16,
+              borderRadius: 8,
+              paddingLeft: 20,
+              marginBottom: 20,
+              borderBottomWidth: 1,
+              borderRightWidth: 1,
+              borderColor: '#bbb',
+            }}
+            onChange={onChangeInput}
+            onChangeText={onChangeText('username')}
+            value={state.username}
+            placeholder="Username"
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              console.log(refPassword, 'refPassword');
+              refPassword.current && refPassword.current.focus();
+            }}
+          />
+          <InputTimeout
+            ref={refPassword}
+            style={{
+              backgroundColor: '#f2f3f5',
+              height: 50,
+              fontSize: 16,
+              borderRadius: 8,
+              borderBottomWidth: 1,
+              borderRightWidth: 1,
+              borderColor: '#bbb',
+              paddingLeft: 20,
+              marginBottom: 20,
+            }}
+            secureTextEntry
+            onChange={onChangeInput}
+            onChangeText={onChangeText('password')}
+            value={state.password}
+            placeholder="Password"
+            // returnKeyType="next"
+          />
+          <View></View>
+          <ButtonShadow onClick={onSubmit}>Login</ButtonShadow>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              paddingTop: 10,
+            }}>
+            <Text>Not a member yet?</Text>
+            <TouchableWithoutFeedback>
+              <Text style={{color: '#73b7c9', paddingLeft: 5}}>Sign up</Text>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
       </View>
-    </View>
+    </Background>
   );
 };
 

@@ -1,14 +1,10 @@
+import {Keyboard} from 'react-native';
+import {refLoading, refModal} from '..';
+
 export const UrlServer = () => {
   const domain = global.origin;
   const localhost = true;
-
-  // switch (domain) {
-  //   case "http://45.13.132.247:1234": // server host
-  //     return "http://45.13.132.247:8082";
-  //   case "http://localhost:3000": // localhost
-  //     return localhost ? "http://localhost:8880" : "http://45.13.132.247:8800";
-  // }
-  return localhost ? 'http://192.168.1.3:8800' : 'http://45.13.132.247:8800';
+  return localhost ? 'http://localhost:8800' : 'http://45.13.132.247:8800';
 };
 
 export default {
@@ -38,13 +34,19 @@ export default {
       )
         .then(s => {
           s.json()
-            .then(val => {
-              console.log('response', val);
-              if (val.code === 401) {
+            .then(res => {
+              console.log('response', res);
+              if (res.code === 401) {
                 // localStorage.clear();
                 // window.location.href = "/auth/login";
+              } else if (res.code !== 0) {
+                refModal.current &&
+                  refModal.current.show({
+                    type: 'error',
+                    content: res.message,
+                  });
               }
-              resolve(val);
+              resolve(res);
             })
             .catch(e => {
               reject(e);
@@ -71,14 +73,28 @@ export default {
       }
 
       console.log('request', UrlServer() + url, fetchParam);
+
+      if (refLoading.current) {
+        refLoading.current.loading(true);
+      }
+      Keyboard.dismiss();
       return fetch(UrlServer() + url, fetchParam)
         .then(json => {
+          console.log(json, 'json');
           if (!json.ok) {
             reject(json);
-          } else resolve(json);
+          } else {
+            resolve(json);
+          }
         })
         .catch(e => {
+          console.log(e, 'catch');
           reject(e);
+        })
+        .finally(() => {
+          if (refLoading.current) {
+            refLoading.current.loading(false);
+          }
         });
     });
   },
