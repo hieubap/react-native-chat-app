@@ -17,6 +17,7 @@ import InputTimeout from '../../components/InputTimeout';
 const screen = Dimensions.get('window');
 
 const Login = ({
+  auth,
   navigation,
   onLogin,
   listMessage,
@@ -195,6 +196,10 @@ const Login = ({
 };
 
 export default connect(
-  ({socket: {listMessage, currentRoom}}) => ({listMessage, currentRoom}),
+  ({socket: {listMessage, currentRoom}, auth: {auth}}) => ({
+    listMessage,
+    currentRoom,
+    auth,
+  }),
   ({socket: {sendMessage}, auth: {onLogin}}) => ({sendMessage, onLogin}),
 )(withNavigation(Login));

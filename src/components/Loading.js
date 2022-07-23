@@ -7,7 +7,6 @@ const LottieLoading = (props, ref) => {
 
   useImperativeHandle(ref, () => ({
     loading: load => {
-      console.log(load, 'load ...');
       setLoading(load);
     },
   }));
