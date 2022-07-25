@@ -1,6 +1,6 @@
-import { API } from "@variable/api";
-import clientUtils from "@utils/client-utils";
-import { combineUrlParams } from "@utils/common";
+import {API} from '@variable/api';
+import clientUtils from '@utils/client-utils';
+import {combineUrlParams} from '@utils/common';
 
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
@@ -8,9 +8,9 @@ export default {
     return new Promise((resolve, reject) => {
       clientUtils
         .requestApi(
-          "post",
+          'post',
           combineUrlParams(
-            `/account/login`
+            `/account/login`,
             // `/chat-server/api/v1/login`
             // {
             //   response_type: "code",
@@ -21,51 +21,33 @@ export default {
             // }
           ),
           body,
-          true
+          true,
         )
-        .then((x) => {
-          resolve(x);
-        })
-        .catch((e) => {
-          reject(e);
-        });
+        .then(resolve)
+        .catch(reject);
     });
   },
   register(body) {
     return new Promise((resolve, reject) => {
       clientUtils
-        .requestApi("post", `${API.account}/register`, body, true)
-        .then((x) => {
-          resolve(x);
-        })
-        .catch((e) => {
-          reject(e);
-        });
+        .requestApi('post', `${API.account}/register`, body, true)
+        .then(resolve)
+        .catch(reject);
     });
   },
   changeAvatar(file) {
     return new Promise((resolve, reject) => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
 
       clientUtils
-        .upload("put", `${API.account}/avatar`, formData)
-        .then((x) => {
+        .upload('put', `${API.account}/avatar`, formData)
+        .then(x => {
           resolve(x);
         })
-        .catch((e) => {
+        .catch(e => {
           reject(e);
         });
     });
-  },
-  logout(pending) {
-    localStorage.clear();
-    if (pending) {
-      setTimeout(() => {
-        window.location.href = "/p/home";
-      }, pending);
-    } else {
-      window.location.href = "/p/home";
-    }
   },
 };

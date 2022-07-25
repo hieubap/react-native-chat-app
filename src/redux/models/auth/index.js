@@ -40,9 +40,7 @@ export default {
               reject(res);
             }
           })
-          .catch(e => {
-            reject(e);
-          });
+          .catch(reject);
       });
     },
     onRegister: (payload, state) => {

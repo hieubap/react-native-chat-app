@@ -102,7 +102,12 @@ const ModalConfirm = (props, ref) => {
                 resizeMode: 'stretch',
               }}
             />
-            <Text style={{marginVertical: 10, fontWeight: 'bold'}}>
+            <Text
+              style={{
+                marginVertical: 10,
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}>
               {state.content}
             </Text>
 

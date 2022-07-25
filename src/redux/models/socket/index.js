@@ -133,11 +133,21 @@ export default {
 
       connect();
     },
-    createRoom: (_, {auth: {auth}}) => {
-      roomProvider.post({adminId: auth?.userId}).then(res => {
-        if (res && res.code === 0) {
-          dispatch.socket.updateListRoom(res.data);
-        }
+    createRoom: (listUserId, {auth: {auth}}) => {
+      return new Promise((resolve, reject) => {
+        roomProvider
+          .create({idAddUsers: listUserId, adminId: auth?.userId})
+          .then(res => {
+            if (res && res.code === 0) {
+              dispatch.socket.updateListRoom({
+                newRoom: res.data,
+                isNew: true,
+                isAdmin: true,
+              });
+              resolve(res);
+            }
+          })
+          .catch(reject);
       });
     },
     getAllUser: _ => {

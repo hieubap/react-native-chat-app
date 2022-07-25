@@ -48,17 +48,9 @@ export default {
               }
               resolve(res);
             })
-            .catch(e => {
-              reject(e);
-            });
+            .catch(reject);
         })
-        .catch(e => {
-          if (e && e.status === 401) {
-            localStorage.clear();
-            // window.location.href = "/auth/login";
-          }
-          reject(e);
-        });
+        .catch(reject);
     });
   },
   requestFetch(methodType, url, headers, body) {
@@ -87,10 +79,7 @@ export default {
             resolve(json);
           }
         })
-        .catch(e => {
-          console.log(e, 'catch');
-          reject(e);
-        })
+        .catch(reject)
         .finally(() => {
           if (refLoading.current) {
             refLoading.current.loading(false);
@@ -109,25 +98,9 @@ export default {
         form,
       )
         .then(s => {
-          s.json()
-            .then(val => {
-              if (val.code === 401) {
-                localStorage.clear();
-                // window.location.href = "/auth/login";
-              }
-              resolve(val);
-            })
-            .catch(e => {
-              reject(e);
-            });
+          s.json().then(resolve).catch(reject);
         })
-        .catch(e => {
-          if (e && e.status === 401) {
-            localStorage.clear();
-            // window.location.href = "/auth/login";
-          }
-          reject(e);
-        });
+        .catch(reject);
     });
   },
 };

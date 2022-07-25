@@ -1,7 +1,13 @@
 import {withNavigation} from '@react-navigation/compat';
 import AnimatedLottieView from 'lottie-react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  Dimensions,
+  StatusBar,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {connect} from 'react-redux';
 import useFinal from '../../hook/useFinal';
 
@@ -39,6 +45,7 @@ const Splash = ({navigation, initAuth, auth}) => {
           alignItems: 'center',
         },
       ]}>
+      <StatusBar barStyle={'dark-content'}></StatusBar>
       <TouchableWithoutFeedback onPress={onSkip}>
         <View
           style={{

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {refModal} from '../../..';
 
 export default {
@@ -21,6 +22,10 @@ export default {
               content: 'Bạn có chắc muốn đăng xuất ?',
             },
             () => {
+              AsyncStorage.clear();
+              dispatch.auth.updateData({auth: {}});
+              dispatch.socket.updateData({isConnect: false});
+              state.socket.stompClient?.disconnect();
               navigation.replace('Login');
             },
           );

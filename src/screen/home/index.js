@@ -1,6 +1,6 @@
 import {withNavigation} from '@react-navigation/compat';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -21,27 +21,21 @@ import InputTimeout from '../../components/InputTimeout';
 import {getImg, timeFromNow} from '../../utils/common';
 import {imgDefault} from '../../variable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalCreate from './ModalCreate';
 
 const height = Dimensions.get('window').height;
-
-const testData = () => {
-  const output = ['Tạo cuộc gọi thoại'];
-  for (let i = 0; i < 50; i++) {
-    output.push(`Linh Vũ Hương (${i})`);
-  }
-  return output;
-};
-const userActive = testData();
 
 const Home = ({
   connect,
   auth,
   navigation,
   listRoom,
+  getAllUser,
   updateData,
   getListMessage,
   goBack,
 }) => {
+  const refCreate = useRef();
   console.log(navigation, 'navigation', navigation.getState());
   const [state, _setState] = useState({onTop: true});
   const setState = data => {
@@ -52,6 +46,7 @@ const Home = ({
   };
   useEffect(() => {
     connect();
+    getAllUser();
   }, []);
 
   const onScroll = event => {
@@ -66,6 +61,10 @@ const Home = ({
     updateData({currentRoomId: room?.id, currentRoom: room});
     getListMessage(room?.id);
     gotoChat();
+  };
+
+  const showCreateRoom = () => {
+    refCreate.current && refCreate.current.show();
   };
 
   console.log(listRoom, 'list room');
@@ -94,10 +93,7 @@ const Home = ({
               {auth.full_name}
             </Text>
           </View>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              // navigation.push('Login');
-            }}>
+          <TouchableWithoutFeedback onPress={showCreateRoom}>
             <Image
               source={require('../../assets/images/edit.png')}
               style={{
@@ -111,7 +107,6 @@ const Home = ({
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             onPress={() => {
-              AsyncStorage.clear();
               goBack(navigation);
             }}>
             <Image
@@ -288,14 +283,19 @@ const Home = ({
           </ScrollView>
         </View>
       </View>
+      <ModalCreate ref={refCreate} />
     </Background>
   );
 };
 
 export default connect(
   ({socket: {listRoom}, auth: {auth}}) => ({listRoom, auth}),
-  ({socket: {connect, getListMessage, updateData}, navigation: {goBack}}) => ({
+  ({
+    socket: {connect, getAllUser, getListMessage, updateData},
+    navigation: {goBack},
+  }) => ({
     connect,
+    getAllUser,
     getListMessage,
     updateData,
     goBack,
