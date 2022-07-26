@@ -4,74 +4,36 @@ import messageProvider from '@data-access/message-provider';
 import roomProvider from '@data-access/room-provider';
 import clientUtils, {UrlServer} from '@utils/client-utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getImg} from '@utils/common';
-import {createRef} from 'react';
 import {imgDefault} from '../../../variable';
 import {actionDevice, actionPublic, actionUser} from './action';
 // import SockJS from 'sockjs-client';
 const SockJS = require('sockjs-client/dist/sockjs');
 const Stomp = require('stomp-websocket');
-// import { message } from "antd";
-
-const refTimeout = createRef();
 
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
+const initState = {
+  isConnect: false,
+  stompClient: null,
+
+  listRoom: [],
+  listMessage: [],
+  listLastSeen: [],
+  listAllUser: [],
+  currentRoomId: null,
+};
 export default {
-  state:
-    // {
-    //   stompClient: null,
-
-    //   listRoom: [],
-    //   listMessage: [],
-    //   listLastSeen: [],
-    //   listAllUser: [],
-    //   currentRoomId: null,
-    // },
-    (() => {
-      try {
-        let data = {
-          isConnect: false,
-          stompClient: null,
-
-          listRoom: [],
-          listMessage: [],
-          listLastSeen: [],
-          listAllUser: [],
-          currentRoomId: null,
-        };
-        // if (data) {
-        //   const parseData = JSON.parse(data);
-        //   clientUtils.auth = 'Bearer ' + parseData.token;
-        //   clientUtils.token = parseData.token;
-        //   return parseData;
-        // }
-        return {
-          stompClient: null,
-
-          listRoom: [],
-          listMessage: [],
-          listLastSeen: [],
-          listAllUser: [],
-          currentRoomId: null,
-        };
-      } catch (error) {
-        console.log(error);
-      }
-      return {
-        stompClient: null,
-
-        listRoom: [],
-        listMessage: [],
-        listLastSeen: [],
-        listAllUser: [],
-        currentRoomId: null,
-      };
-    })(),
+  state: initState,
 
   reducers: {
     updateData(state, payload = {}) {
       // AsyncStorage.setItem(`_store_chat`, {...state, ...payload});
       return {...state, ...payload};
+    },
+    clear(state, payload = {}) {
+      // AsyncStorage.setItem(`_store_chat`, {...state, ...payload});
+      const {listAllUser = {}} = state;
+
+      return {...initState, listAllUser};
     },
   },
   effects: dispatch => ({
@@ -100,7 +62,6 @@ export default {
       }
 
       const stompSuccess = frame => {
-        console.log(frame, 'frame');
         // AsyncStorage.setItem('auth', {
         //   userId: 1,
         //   avatar:
@@ -154,6 +115,7 @@ export default {
       accountProvider.search({page: 0, size: 99}).then(res => {
         if (res && res.code === 0) {
           dispatch.socket.updateData({listAllUser: res.data});
+          AsyncStorage.setItem('listAllUser', res.data);
         }
       });
     },
@@ -177,7 +139,7 @@ export default {
       } else {
         newList = newRoom;
       }
-      console.log(auth, 'auth');
+      console.log('listRoom______', newList);
       dispatch.socket.updateData({
         listRoom: newList.map(item => ({
           ...item,

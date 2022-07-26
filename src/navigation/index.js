@@ -10,7 +10,6 @@ import Splash from '../screen/splash';
 const Stack = createStackNavigator();
 
 const StackNavigation = ({}) => {
-  console.log('1');
   return (
     <Stack.Navigator
       // drawerContent={(props) => <CustomDrawerContent {...props} />}

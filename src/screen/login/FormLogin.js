@@ -5,7 +5,7 @@ import {withNavigation} from '@react-navigation/compat';
 import {reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import FormItem from '../../components/FormItem';
-import { refModal } from '../..';
+import {refModal} from '../..';
 
 const screen = Dimensions.get('window');
 
@@ -28,26 +28,18 @@ const FormLogin = ({changeView, handleSubmit, navigation, onLogin}) => {
   const refPassword = useRef();
 
   const onSubmit = values => {
-    onLogin(values)
-      .then(() => {
-        refModal.current &&
-          refModal.current.show(
-            {
-              type: 'success',
-              content: 'Đăng nhập thành công',
-            },
-            () => {
-              navigation.replace('Home');
-            },
-          );
-      })
-      .catch(e => {
-        refModal.current &&
-          refModal.current.show({
-            type: 'error',
-            content: 'Hệ thống đang có sự cố. Vui lòng thử lại sau!',
-          });
-      });
+    onLogin(values).then(() => {
+      refModal.current &&
+        refModal.current.show(
+          {
+            type: 'success',
+            content: 'Đăng nhập thành công',
+          },
+          () => {
+            navigation.replace('Home');
+          },
+        );
+    });
   };
 
   return (

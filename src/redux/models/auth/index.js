@@ -1,5 +1,6 @@
 import authProvider from '@data-access/auth-provider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {refModal} from '../../..';
 
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
@@ -12,12 +13,6 @@ export default {
     },
   },
   effects: dispatch => ({
-    initAuth: () => {
-      AsyncStorage.getItem('auth').then(res => {
-        const auth = res ? JSON.parse(res) : {};
-        dispatch.auth.updateData({auth});
-      });
-    },
     onLogin: (payload, {}) => {
       // if (!info?.ip) return;
       return new Promise((resolve, reject) => {
@@ -37,10 +32,20 @@ export default {
               dispatch.auth.updateData({auth: res.data});
               resolve(res);
             } else {
-              reject(res);
+              refModal.current &&
+                refModal.current.show({
+                  type: 'error',
+                  content: res.message,
+                });
             }
           })
-          .catch(reject);
+          .catch(e => {
+            refModal.current &&
+              refModal.current.show({
+                type: 'error',
+                content: 'Hệ thống đang có sự cố. Vui lòng thử lại sau!',
+              });
+          });
       });
     },
     onRegister: (payload, state) => {

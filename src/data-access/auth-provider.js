@@ -7,22 +7,7 @@ export default {
   login(body) {
     return new Promise((resolve, reject) => {
       clientUtils
-        .requestApi(
-          'post',
-          combineUrlParams(
-            `/account/login`,
-            // `/chat-server/api/v1/login`
-            // {
-            //   response_type: "code",
-            //   client_id: "hoang",
-            //   scope: "read",
-            //   state: "2K4ZDYkjCYQf6u5NPJYGDtOtxmUkgI73WIcI-PJFe8k%3D",
-            //   redirect_uri: "http://localhost:3000",
-            // }
-          ),
-          body,
-          true,
-        )
+        .requestApi('post', combineUrlParams(`/account/login`), body, true)
         .then(resolve)
         .catch(reject);
     });

@@ -14,62 +14,37 @@ const provider = (API = '') => ({
           }),
           {},
         )
-        .then(x => {
-          console.log('search api', x, param);
-          resolve(x);
-        })
-        .catch(e => {
-          console.error('search api error', e, param);
-          reject(e);
-        });
+        .then(resolve)
+        .catch(reject);
     });
   },
   detail(id) {
     return new Promise((resolve, reject) => {
       clientUtils
         .requestApi('get', `${API}/${id}`, {})
-        .then(x => {
-          resolve(x);
-        })
-        .catch(e => {
-          reject(e);
-        });
+        .then(resolve)
+        .catch(reject);
     });
   },
   post(body) {
     return new Promise((resolve, reject) => {
-      clientUtils
-        .requestApi('post', API, body)
-        .then(x => {
-          resolve(x);
-        })
-        .catch(e => {
-          reject(e);
-        });
+      clientUtils.requestApi('post', API, body).then(resolve).catch(reject);
     });
   },
   put(body, id) {
     return new Promise((resolve, reject) => {
       clientUtils
         .requestApi('put', `${API}/${id}`, body)
-        .then(x => {
-          resolve(x);
-        })
-        .catch(e => {
-          reject(e);
-        });
+        .then(resolve)
+        .catch(reject);
     });
   },
   delete(id) {
     return new Promise((resolve, reject) => {
       clientUtils
         .requestApi('delete', `${API}/${id}`, {})
-        .then(x => {
-          resolve(x);
-        })
-        .catch(e => {
-          reject(e);
-        });
+        .then(resolve)
+        .catch(reject);
     });
   },
 });

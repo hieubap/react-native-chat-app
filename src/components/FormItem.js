@@ -2,6 +2,7 @@ import React, {useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {Field} from 'redux-form';
 import {Text, TextInput, View} from 'react-native';
+import InputTimeout from './InputTimeout';
 
 const validates = {
   required:
@@ -22,12 +23,12 @@ const renderField = ({
     <View>
       <View>
         <Text style={{marginBottom: 4, marginTop: 2}}>{label}</Text>
-        <TextInput
+        <InputTimeout
           style={[style]}
           onChangeText={onChange}
           placeholder={placeholder}
           secureTextEntry={secureTextEntry}
-          {...restInput}></TextInput>
+          {...restInput}></InputTimeout>
       </View>
       {touched &&
         ((error && <Text style={{color: 'red'}}>{error}</Text>) ||

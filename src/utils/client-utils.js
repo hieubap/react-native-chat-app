@@ -1,10 +1,8 @@
 import {Keyboard} from 'react-native';
-import {refLoading, refModal} from '..';
+import {refLoading} from '..';
 
 export const UrlServer = () => {
-  const domain = global.origin;
-  const localhost = true;
-  return localhost ? 'http://localhost:8800' : 'http://45.13.132.247:8800';
+  return 'http://localhost:8800';
 };
 
 export default {
@@ -33,22 +31,7 @@ export default {
         body,
       )
         .then(s => {
-          s.json()
-            .then(res => {
-              console.log('response', res);
-              if (res.code === 401) {
-                // localStorage.clear();
-                // window.location.href = "/auth/login";
-              } else if (res.code !== 0) {
-                refModal.current &&
-                  refModal.current.show({
-                    type: 'error',
-                    content: res.message,
-                  });
-              }
-              resolve(res);
-            })
-            .catch(reject);
+          s.json().then(resolve).catch(reject);
         })
         .catch(reject);
     });
@@ -64,7 +47,7 @@ export default {
         fetchParam.body = body;
       }
 
-      console.log('request', UrlServer() + url, fetchParam);
+      console.log('==> REQUEST', UrlServer() + url, fetchParam);
 
       if (refLoading.current) {
         refLoading.current.loading(true);
@@ -72,7 +55,7 @@ export default {
       Keyboard.dismiss();
       return fetch(UrlServer() + url, fetchParam)
         .then(json => {
-          console.log(json, 'json');
+          console.log('<== RESPONSE:', json);
           if (!json.ok) {
             reject(json);
           } else {

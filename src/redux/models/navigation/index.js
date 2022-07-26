@@ -11,6 +11,16 @@ export default {
     },
   },
   effects: dispatch => ({
+    initStore: () => {
+      AsyncStorage.getItem('auth').then(res => {
+        const auth = res ? JSON.parse(res) : {};
+        dispatch.auth.updateData({auth});
+      });
+      AsyncStorage.getItem('listAllUser').then(res => {
+        const listAllUser = res ? JSON.parse(res) : [];
+        dispatch.socket.updateData({listAllUser});
+      });
+    },
     goBack: (navigation, state) => {
       if (!navigation) return;
 
@@ -24,7 +34,7 @@ export default {
             () => {
               AsyncStorage.clear();
               dispatch.auth.updateData({auth: {}});
-              dispatch.socket.updateData({isConnect: false});
+              dispatch.socket.clear();
               state.socket.stompClient?.disconnect();
               navigation.replace('Login');
             },

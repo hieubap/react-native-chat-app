@@ -13,16 +13,16 @@ import useFinal from '../../hook/useFinal';
 
 const screen = Dimensions.get('screen');
 
-const Splash = ({navigation, initAuth, auth}) => {
+const Splash = ({navigation, initStore, auth}) => {
   const [state, _setState] = useState({showSkip: false});
   const setState = data => {
     _setState(pre => ({...pre, ...data}));
   };
 
   useFinal(
-    initAuth,
+    initStore,
     () => {
-      console.log(auth, 'auth spash');
+      console.log(auth, 'auth_spash');
       setState({showSkip: true});
     },
     [auth],
@@ -98,5 +98,5 @@ const Splash = ({navigation, initAuth, auth}) => {
 
 export default connect(
   ({auth: {auth}}) => ({auth}),
-  ({auth: {initAuth}}) => ({initAuth}),
+  ({navigation: {initStore}}) => ({initStore}),
 )(withNavigation(Splash));
