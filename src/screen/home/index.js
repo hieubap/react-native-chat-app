@@ -1,16 +1,11 @@
 import {withNavigation} from '@react-navigation/compat';
-import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
+  FlatList,
   Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   Text,
-  TextInput,
+  TouchableHighlight,
   View,
 } from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
@@ -36,7 +31,6 @@ const Home = ({
   goBack,
 }) => {
   const refCreate = useRef();
-  console.log(navigation, 'navigation', navigation.getState());
   const [state, _setState] = useState({onTop: true});
   const setState = data => {
     _setState(pre => ({...pre, ...data}));
@@ -57,7 +51,12 @@ const Home = ({
   };
 
   const selectRoom = room => () => {
-    console.log('click select room');
+    if (state.click) return;
+
+    setState({click: true});
+    setTimeout(() => {
+      setState({click: false});
+    }, 500);
     updateData({currentRoomId: room?.id, currentRoom: room});
     getListMessage(room?.id);
     gotoChat();
@@ -66,8 +65,6 @@ const Home = ({
   const showCreateRoom = () => {
     refCreate.current && refCreate.current.show();
   };
-
-  console.log(listRoom, 'list room');
 
   return (
     <Background>
@@ -219,68 +216,82 @@ const Home = ({
             borderRightColor: '#888',
             borderBottomColor: '#888',
           }}>
-          <ScrollView
-            onScroll={onScroll}
+          <FlatList
+            // onScroll={onScroll}
             style={{height: height - 160, marginTop: -5}}
-            showsVerticalScrollIndicator={false}>
-            {listRoom?.map((item, index) => (
-              <TouchableWithoutFeedback
+            showsVerticalScrollIndicator={false}
+            key={item => item.id}
+            renderItem={({item, key}) => (
+              <View
                 style={{
-                  flexDirection: 'row',
-                  height: 85,
-                  alignItems: 'center',
-                  paddingTop: 2,
-                  paddingBottom: 2,
+                  padding: 2,
                   borderBottomWidth: 1,
                   borderBottomColor: '#ddd',
                 }}
-                key={index}
-                onPress={selectRoom(item)}>
-                <View>
-                  <Avatar source={{uri: getImg(item.avatar)}}></Avatar>
-                </View>
-                <View style={{paddingLeft: 15, flex: 1}}>
+                >
+                <TouchableHighlight
+                  key={key}
+                  underlayColor="#ccc"
+                  delayPressIn={50}
+                  onPress={selectRoom(item)}
+                  style={{flex: 1}}>
                   <View
                     style={{
-                      display: 'flex',
                       flexDirection: 'row',
-                      justifyContent: 'space-between',
+                      height: 85,
+                      alignItems: 'center',
+                      paddingTop: 2,
+                      paddingBottom: 2,
                     }}>
-                    <Text style={{fontWeight: '500', color: '#555'}}>
-                      {item.name}
-                    </Text>
-                    <Text
-                      style={{
-                        backgroundColor: '#64BEE1',
-                        color: 'white',
-                        fontWeight: '500',
-                        borderRadius: 20,
-                        fontSize: 10,
-                        paddingRight: 4,
-                        paddingLeft: 5,
-                        alignSelf: 'center',
-                        fontWeight: 'bold',
-                      }}>
-                      {1}
-                    </Text>
+                    <View>
+                      <Avatar source={{uri: getImg(item.avatar)}}></Avatar>
+                    </View>
+                    <View style={{paddingLeft: 15, flex: 1}}>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text style={{fontWeight: '500', color: '#555'}}>
+                          {item.name}
+                        </Text>
+                        <Text
+                          style={{
+                            backgroundColor: '#64BEE1',
+                            color: 'white',
+                            fontWeight: '500',
+                            borderRadius: 20,
+                            fontSize: 10,
+                            paddingRight: 4,
+                            paddingLeft: 5,
+                            alignSelf: 'center',
+                            fontWeight: 'bold',
+                          }}>
+                          {1}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={{marginTop: 5, fontSize: 12, color: '#999'}}>
+                          {item.lastMessage?.content}
+                        </Text>
+                        <Text
+                          style={{marginTop: 5, fontSize: 12, color: '#999'}}>
+                          {item?.lastMessage?.createdAt?.fromNow()}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                  <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text style={{marginTop: 5, fontSize: 12, color: '#999'}}>
-                      Bạn đã gửi 1 ảnh
-                    </Text>
-                    <Text style={{marginTop: 5, fontSize: 12, color: '#999'}}>
-                      {item?.lastMessage?.createdAt?.fromNow()}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableWithoutFeedback>
-            ))}
-          </ScrollView>
+                </TouchableHighlight>
+              </View>
+            )}
+            data={listRoom}></FlatList>
         </View>
       </View>
       <ModalCreate ref={refCreate} />

@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  Animated,
   Dimensions,
   FlatList,
   Image,
@@ -29,6 +30,7 @@ const ModalCreate = ({createRoom, listAllUser}, ref) => {
     searchText: '',
     listSelect: [],
   });
+  const refScale = useRef(new Animated.Value(0));
   console.log(listAllUser, 'listAllUser');
   const setState = data => {
     _setState(pre => ({...pre, ...data}));
@@ -36,11 +38,23 @@ const ModalCreate = ({createRoom, listAllUser}, ref) => {
   useImperativeHandle(ref, () => ({
     show: () => {
       setState({visible: true});
+      Animated.spring(refScale.current, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
     },
   }));
 
   const onCancel = () => {
-    setState({visible: false});
+    Animated.spring(refScale.current, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(() => {
+      setState({visible: false});
+    }, 50);
   };
 
   const onOk = () => {
@@ -78,7 +92,7 @@ const ModalCreate = ({createRoom, listAllUser}, ref) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <View
+        <Animated.View
           style={{
             width: (screen.width * 4) / 5,
             backgroundColor: 'white',
@@ -86,6 +100,7 @@ const ModalCreate = ({createRoom, listAllUser}, ref) => {
             paddingVertical: 15,
             borderRadius: 20,
             elevation: 20,
+            transform: [{scale: refScale.current}],
           }}>
           <View
             style={{
@@ -321,7 +336,7 @@ const ModalCreate = ({createRoom, listAllUser}, ref) => {
               </ButtonShadow>
             </View>
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );

@@ -8,6 +8,7 @@ import {
   Dimensions,
   Image,
   Keyboard,
+  FlatList,
 } from 'react-native';
 import {connect} from 'react-redux';
 import Avatar from '../../components/Avatar';
@@ -73,7 +74,6 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
   };
 
   useEffect(() => {
-    scrollBottom();
     Keyboard.addListener('keyboardDidShow', eventKeyBoard);
     Keyboard.addListener('keyboardDidHide', eventKeyBoard);
   }, []);
@@ -170,22 +170,45 @@ const Chat = ({navigation, listMessage, sendMessage, currentRoom}) => {
           paddingTop: 20,
           paddingLeft: 5,
           paddingRight: 5,
-          overflow: 'hidden',
+          // overflow: 'hidden',
           height: state.height - 140,
         }}>
-        <ScrollView ref={refScroll} style={{paddingHorizontal: 5}}>
-          {listMessage.map((item, idx) => (
-            <Message
-              key={idx}
-              data={item}
-              front={listMessage[idx - 1]?.fromId === item.fromId}
-              end={listMessage[idx + 1]?.fromId === item.fromId}
-              numberLike={listMessage[idx + 1]?.numberLike}
-              listMessage={listMessage}
-              maxWidth={state.width}
-            />
-          ))}
-        </ScrollView>
+        <FlatList
+          key={(_, index) => index}
+          renderItem={({item, key}) => (
+            /** 
+               * cách 1: phải có 2 props trong View
+               * <View
+                style={{borderWidth: 1, borderColor: 'white'}}
+                onStartShouldSetResponder={() => true}>
+                {children}
+                </View>
+               * 
+                cách 2: 
+                <TouchableWithoutFeedback>
+                  <View>
+                  {children}
+                  </View>
+                </TouchableWithoutFeedback>
+               *  */
+
+            <TouchableWithoutFeedback>
+              <View>
+                <Message
+                  key={key}
+                  data={item}
+                  front={listMessage[key - 1]?.fromId === item.fromId}
+                  end={listMessage[key + 1]?.fromId === item.fromId}
+                  numberLike={listMessage[key + 1]?.numberLike}
+                  listMessage={listMessage}
+                  maxWidth={state.width}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          data={listMessage}
+          ref={refScroll}
+          style={{paddingHorizontal: 5}}></FlatList>
       </View>
       <View
         style={{

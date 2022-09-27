@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Dimensions, Image, Modal, Text, View} from 'react-native';
+import {Animated, Dimensions, Image, Modal, Text, View} from 'react-native';
 import ButtonShadow from './ButtonShadow';
 
 const screen = Dimensions.get('screen');
@@ -13,6 +13,7 @@ const screen = Dimensions.get('screen');
 const ModalConfirm = (props, ref) => {
   const refOk = useRef();
   const refCancel = useRef();
+  const refScale = useRef(new Animated.Value(0));
   const [state, _setState] = useState({
     visible: false,
     okText: '',
@@ -30,6 +31,11 @@ const ModalConfirm = (props, ref) => {
       setState({visible: true, type, content, okText, cancelText});
       refOk.current = onSuccess;
       refCancel.current = onCancel;
+      Animated.spring(refScale.current, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
     },
   }));
 
@@ -42,13 +48,24 @@ const ModalConfirm = (props, ref) => {
     return [require('../assets/images/success.png'), '#01A601'];
   }, [state.type]);
 
+  const setTimeClose = () => {
+    setTimeout(() => {
+      setState({visible: false});
+    }, 50);
+    Animated.spring(refScale.current, {
+      toValue: 0,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const onCancel = () => {
-    setState({visible: false});
     if (refCancel.current) refCancel.current();
+    setTimeClose();
   };
 
   const onOk = () => {
-    setState({visible: false});
+    setTimeClose();
     if (refOk.current) refOk.current();
   };
 
@@ -61,7 +78,7 @@ const ModalConfirm = (props, ref) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <View
+        <Animated.View
           style={{
             width: (screen.width * 4) / 5,
             backgroundColor: 'white',
@@ -69,6 +86,7 @@ const ModalConfirm = (props, ref) => {
             paddingVertical: 15,
             borderRadius: 20,
             elevation: 20,
+            transform: [{scale: refScale.current}],
           }}>
           {/* <TouchableWithoutFeedback
             onPress={() => {
@@ -133,7 +151,7 @@ const ModalConfirm = (props, ref) => {
               </ButtonShadow>
             </View>
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );

@@ -115,7 +115,7 @@ export default {
       accountProvider.search({page: 0, size: 99}).then(res => {
         if (res && res.code === 0) {
           dispatch.socket.updateData({listAllUser: res.data});
-          AsyncStorage.setItem('listAllUser', res.data);
+          AsyncStorage.setItem('listAllUser', JSON.stringify(res.data));
         }
       });
     },
