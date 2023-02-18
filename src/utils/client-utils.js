@@ -2,7 +2,7 @@ import {Keyboard} from 'react-native';
 import {refLoading} from '..';
 
 export const UrlServer = () => {
-  return 'http://localhost:8800';
+  return 'http://14.225.205.222:8801';
 };
 
 export default {

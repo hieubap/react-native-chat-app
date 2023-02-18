@@ -6,7 +6,8 @@ import clientUtils, {UrlServer} from '@utils/client-utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {imgDefault} from '../../../variable';
 import {actionDevice, actionPublic, actionUser} from './action';
-// import SockJS from 'sockjs-client';
+// import SockJS from 'sockjs-client/dist/sockjs';
+// import Stomp from 'stomp-websocket';
 const SockJS = require('sockjs-client/dist/sockjs');
 const Stomp = require('stomp-websocket');
 
